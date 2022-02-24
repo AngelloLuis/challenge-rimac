@@ -1,0 +1,193 @@
+swagger: "2.0"
+info:
+  description: "Este es el challenge de creación de lambdas desplegados en AWS y intregracion con el api de Swapi"
+  version: "1.0.0"
+  title: "Challenge-Rimac"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "llmlku78r4.execute-api.us-west-2.amazonaws.com"
+tags:
+  - name: "Challenge"
+    description: "Everything about your Pets"
+    externalDocs:
+      description: "Find out more"
+      url: "http://swagger.io"
+  - name: "films"
+    description: "Access to films swapi"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /tasks:
+    post:
+      tags:
+        - "Challenge"
+      summary: "Add a task"
+      description: ""
+      operationId: "addTask"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "task object"
+          required: true
+          schema:
+            $ref: "#/definitions/Task"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TaskResponse"
+        "400":
+          description: "Invalid tag value"
+      security:
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
+
+    get:
+      tags:
+        - "Challenge"
+      summary: "get the tasks in th BD"
+      description: "get the tasks in th BD"
+      operationId: "getTasks"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        "400":
+          description: "Invalid status value"
+      security:
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
+
+  /tasks/{id}:
+    get:
+      tags:
+        - "Challenge"
+      summary: "Finds Pets by tags"
+      description: "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing."
+      operationId: "getTask"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the film"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Task"
+        "400":
+          description: "Invalid tag value"
+      security:
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
+
+  /films-swapi/{id}:
+    get:
+      tags:
+        - "films"
+      summary: "Returns pet inventories by status"
+      description: "Returns a map of status codes to quantities"
+      operationId: "getInventory"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID of the film"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+      security:
+        - api_key: []
+
+
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+  Task:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        example: "Esto es un ejemplo"
+      description:
+        type: "string"
+        example: "esto es la demo para el ejemplo"
+  TaskResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        example: "1bc667dc-3bb3-47b6-83b9-f9a823fd1f5e"
+      title:
+        type: "string"
+        example: "Esto es un ejemplo"
+      description:
+        type: "string"
+        example: "esto es la demo para el ejemplo"
+      createdAt:
+        type: "string"
+        example: "2022-02-24T16:24:05.843Z"
+    xml:
+      name: "Pet"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
